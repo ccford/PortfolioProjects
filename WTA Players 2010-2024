@@ -1,0 +1,297 @@
+-- Average points in Top 10 from 2010-2019
+SELECT
+  DISTINCT CONCAT(name_first, ' ', name_last) AS full_name,
+  AVG(points) AS avg_points
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_10s` AS tennis_rankings_10s
+ON
+  tennis_players.player_id = tennis_rankings_10s.player
+WHERE
+  rank < 11
+GROUP BY
+  full_name
+ORDER BY
+  avg_points DESC;
+
+-- Average points in Top 10 from 2020-2023
+SELECT
+  DISTINCT CONCAT(name_first, ' ', name_last) AS full_name,
+  AVG(points) AS avg_points
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_20s` AS tennis_rankings_20s
+ON
+  tennis_players.player_id = tennis_rankings_20s.player
+WHERE
+  rank < 11
+GROUP BY
+  full_name
+ORDER BY
+  avg_points DESC;
+
+-- Average points in Top 10 2024
+SELECT
+  CONCAT(name_first, ' ', name_last) AS full_name,
+  rank,
+  AVG(points) AS avg_points
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  rank < 11
+GROUP BY
+  full_name,
+  rank
+ORDER BY
+  rank;
+
+-- Average tours in Top 10 from 2010-2019
+SELECT
+  DISTINCT CONCAT(name_first, ' ', name_last) AS full_name,
+  AVG(tours) AS avg_tours
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_10s` AS tennis_rankings_10s
+ON
+  tennis_players.player_id = tennis_rankings_10s.player
+WHERE
+  rank < 11
+GROUP BY
+  full_name
+ORDER BY
+  avg_tours DESC;
+
+-- Average tours in Top 10 from 2020-2023
+SELECT
+  DISTINCT CONCAT(name_first, ' ', name_last) AS full_name,
+  AVG(tours) AS avg_tours
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_20s` AS tennis_rankings_20s
+ON
+  tennis_players.player_id = tennis_rankings_20s.player
+WHERE
+  rank < 11
+GROUP BY
+  full_name
+ORDER BY
+  avg_tours DESC;
+
+-- Average tours in Top 10 2024
+SELECT
+  CONCAT(name_first, ' ', name_last) AS full_name,
+  rank,
+  AVG(tours) AS avg_tours
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  rank < 11
+GROUP BY
+  full_name,
+  rank
+ORDER BY
+  rank;
+
+-- Current Gen Z players
+SELECT
+  COUNT(DISTINCT player) AS gen_z_players
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  dob BETWEEN '1997-01-01' AND '2012-12-31';
+
+-- Current Millenial players
+SELECT
+  COUNT(DISTINCT player) AS gen_y_players
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  dob BETWEEN '1981-01-01' AND '1996-12-31';
+
+-- Current Top 10 players
+SELECT
+  CONCAT(name_first, ' ', name_last) AS full_name,
+  ranking_date,
+  rank,
+  points,
+  tours
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  rank < 11
+ORDER BY
+  rank,
+  ranking_date DESC;
+
+-- Current players dominant hand
+SELECT
+  hand,
+  COUNT(hand) AS dom_hand
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  ranking_date = '2024-05-27'
+GROUP BY
+  hand
+ORDER BY
+  dom_hand DESC;
+
+-- Players per country 2010-2019
+SELECT
+  country,
+  COUNT(DISTINCT player) AS num_of_players_per_country
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_10s` AS tennis_rankings_10s
+ON
+  tennis_players.player_id = tennis_rankings_10s.player
+GROUP BY
+  country
+HAVING
+  num_of_players_per_country > 0
+ORDER BY
+  num_of_players_per_country DESC;
+
+-- Top 10 players per country 2010-2019
+SELECT
+  country,
+  COUNT(DISTINCT player) AS num_of_players_per_country
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_10s` AS tennis_rankings_10s
+ON
+  tennis_players.player_id = tennis_rankings_10s.player
+WHERE
+  rank < 11
+GROUP BY
+  country
+HAVING
+  num_of_players_per_country >= 1
+ORDER BY
+  num_of_players_per_country DESC;
+
+-- Players per country 2020-2023
+SELECT
+  country,
+  COUNT(DISTINCT player) AS num_of_players_per_country
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_20s` AS tennis_rankings_20s
+ON
+  tennis_players.player_id = tennis_rankings_20s.player
+GROUP BY
+  country
+HAVING
+  num_of_players_per_country > 0
+ORDER BY
+  num_of_players_per_country DESC;
+
+-- Top 10 players per country 2020-2023
+SELECT
+  country,
+  COUNT(DISTINCT player) AS num_of_players_per_country
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_20s` AS tennis_rankings_20s
+ON
+  tennis_players.player_id = tennis_rankings_20s.player
+WHERE
+  rank < 11
+GROUP BY
+  country
+HAVING
+  num_of_players_per_country >= 1
+ORDER BY
+  num_of_players_per_country DESC;
+
+-- Current players per country
+SELECT
+  country,
+  COUNT(DISTINCT player) AS num_of_players_per_country
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  ranking_date = '2024-05-27'
+GROUP BY
+  tennis_players.country
+ORDER BY
+  num_of_players_per_country DESC;
+
+-- Top 10 current players per country
+SELECT
+  country,
+  COUNT(DISTINCT player) AS num_of_players_per_country
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.current_tennis_rankings` AS current_tennis_rankings
+ON
+  tennis_players.player_id = current_tennis_rankings.player
+WHERE
+  ranking_date = '2024-05-27'
+  AND rank < 11
+GROUP BY
+  tennis_players.country
+ORDER BY
+  num_of_players_per_country DESC;
+
+-- Gen Z players 2020-2023
+SELECT
+  COUNT(DISTINCT player) AS gen_z_players
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_20s` AS tennis_rankings_20s
+ON
+  tennis_players.player_id = tennis_rankings_20s.player
+WHERE
+  dob BETWEEN '1997-01-01' AND '2012-12-31';
+
+-- Millenial players 2020-2023
+SELECT
+  COUNT(DISTINCT player) AS gen_y_players
+FROM
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_players` AS tennis_players
+LEFT JOIN
+  `trans-jigsaw-427419-t9.wta_players_and_rankings.tennis_rankings_20s` AS tennis_rankings_20s
+ON
+  tennis_players.player_id = tennis_rankings_20s.player
+WHERE
+  dob BETWEEN '1981-01-01' AND '1996-12-31';
+
